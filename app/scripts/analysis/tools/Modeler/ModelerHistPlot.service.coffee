@@ -2,9 +2,16 @@
 
 BaseService = require 'scripts/BaseClasses/BaseService.coffee'
 
-module.exports = class ChartsHistogram extends BaseService
+module.exports = class ModelerHist extends BaseService
+  @inject 'socrat_analysis_modeler_kernel_density_plotter', 'socrat_analysis_modeler_getParams'
+
 
   initialize: ->
+    @kernel = @socrat_analysis_modeler_kernel_density_plotter
+    @gauss = @socrat_analysis_modeler_getParams
+    @bandwith = 4
+    @kde = null
+
 
   plotHist: (bins, container, arr, _graph, gdata, x, height, width, data) ->
     console.log("Plotting histogram")
@@ -34,79 +41,97 @@ module.exports = class ChartsHistogram extends BaseService
     yAxis = d3.svg.axis().scale(y).orient("left")
     xAxis = d3.svg.axis().scale(x).orient("bottom")
 
+
+
+    '''
+    line = d3.svg.line()
+      .x (d) ->
+        x (d[0])
+      .y (d) ->
+        y (d[0])
+    '''
+
+
+
     getColor = d3.scale.category10()
 
     # x axis
     _graph.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + (height - padding) + ")")
-    .call xAxis
-    .style('font-size', '16px')
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (height - padding) + ")")
+      .call xAxis
+      .style('font-size', '16px')
 
     # y axis
     _graph.append("g")
-    .attr("class", "y axis")
-    .attr('transform', 'translate(' + padding + ',0)' )
-    .call(yAxis)
-    .style('font-size', '16px')
+      .attr("class", "y axis")
+      .attr('transform', 'translate(' + padding + ',0)' )
+      .call(yAxis)
+      .style('font-size', '16px')
+
+
 
     # make x y axis thin
     _graph.selectAll('.x.axis path')
-    .style({'fill' : 'none', 'stroke' : 'black', 'shape-rendering' : 'crispEdges', 'stroke-width': '1px'})
+      .style({'fill' : 'none', 'stroke' : 'black', 'shape-rendering' : 'crispEdges', 'stroke-width': '1px'})
     _graph.selectAll('.y.axis path')
-    .style({'fill' : 'none', 'stroke' : 'black', 'shape-rendering' : 'crispEdges', 'stroke-width': '1px'})
+      .style({'fill' : 'none', 'stroke' : 'black', 'shape-rendering' : 'crispEdges', 'stroke-width': '1px'})
 
     # rotate text on x axis
+    '''
     _graph.selectAll('.x.axis text')
-    .attr('transform', (d) ->
-       'translate(' + this.getBBox().height*-2 + ',' + this.getBBox().height + ')rotate(-40)')
-    .style('font-size', '16px')
-
+      .attr('transform', (d) ->
+      'translate(' + this.getBBox().height*-2 + ',' + this.getBBox().height + ')rotate(-40)')
+      .style('font-size', '16px')
+    '''
     # Title on x-axis
     _graph.append('text')
-    .attr('class', 'label')
-    .attr('text-anchor', 'middle')
-    .attr('transform', 'translate(' + width + ',' + (height-padding/2) + ')')
-    .text gdata.xLab.value
+      .attr('class', 'label')
+      .attr('text-anchor', 'middle')
+      .attr('transform', 'translate(' + width + ',' + (height-padding/2) + ')')
+      .text gdata.xLab.value
 
     # Title on y-axis
     _graph.append("text")
-    .attr('class', 'label')
-    .attr('text-anchor', 'middle')
-    .attr('transform', 'translate(0,' + padding/2 + ')')
-    .text "Counts"
+      .attr('class', 'label')
+      .attr('text-anchor', 'middle')
+      .attr('transform', 'translate(0,' + padding/2 + ')')
+      .text "Counts"
 
     # bar elements
     bar = _graph.selectAll('.bar')
-    .data(dataHist)
+      .data(dataHist)
 
     bar.enter()
-    .append("g")
+      .append("g")
 
     rect_width = (width - 2*padding)/bins
     bar.append('rect')
-    .attr('x', (d) -> x d.x)
-    .attr('y', (d) -> y d.y)
-    .attr('width', rect_width)
-    .attr('height', (d) -> Math.abs(height - y d.y) - padding)
-    .attr("stroke", "white")
-    .attr("stroke-width", 1)
-    .style('fill', getColor(0))
-    .on('mouseover', () -> d3.select(this).transition().style('fill', getColor(1)))
-    .on('mouseout', () -> d3.select(this).transition().style('fill', getColor(0)))
+      .attr('x', (d) -> x d.x)
+      .attr('y', (d) -> y d.y)
+      .attr('width', rect_width)
+      .attr('height', (d) -> Math.abs(height - y d.y) - padding)
+      .attr("stroke", "white")
+      .attr("stroke-width", 1)
+      .style('fill', getColor(0))
+      .on('mouseover', () -> d3.select(this).transition().style('fill', getColor(1)))
+      .on('mouseout', () -> d3.select(this).transition().style('fill', getColor(0)))
 
     bar.append('text')
-    .attr('x', (d) -> x d.x)
-    .attr('y', (d) -> (y d.y) - 25)
-    .attr('dx', (d) -> .5 * rect_width)
-    .attr('dy', '20px')
-    .attr('fill', 'black')
-    .attr('text-anchor', 'middle')
-    .attr('z-index', 1)
-    .text (d) -> d.y
+      .attr('x', (d) -> x d.x)
+      .attr('y', (d) -> (y d.y) - 25)
+      .attr('dx', (d) -> .5 * rect_width)
+      .attr('dy', '20px')
+      .attr('fill', 'black')
+      .attr('text-anchor', 'middle')
+      .attr('z-index', 1)
+      .text (d) -> d.y
+
+    @gauss.drawNormalCurve(data, width, height, _graph)
+
 
   drawHist: (_graph, data, container, gdata, width, height, ranges) ->
-    #pre-set value of slider
+#pre-set value of slider
     container.append('div').attr('id', 'slider')
     $slider = $("#slider")
     bins = 5
@@ -125,3 +150,8 @@ module.exports = class ChartsHistogram extends BaseService
     $slider.on "slidechange", (event, ui) =>
       bins = parseInt ui.value
       @plotHist bins, container, arr, _graph, gdata, x, height, width, data
+
+
+
+
+
