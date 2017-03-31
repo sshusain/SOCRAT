@@ -13,7 +13,7 @@ module.exports = class DistList extends BaseService
       x: ['integer', 'number', 'string']
       y: false
       z: false
-      message: "This class designs a simple polynomial model fitting curve"
+      message: "This class designs a simple Normal Distribution fitting curve"
       xLabel: "Add x"
 
     ,
@@ -22,7 +22,7 @@ module.exports = class DistList extends BaseService
       x: ['integer', 'number']
       y: false
       z: false
-      message: "Choose an x variable and a y variable."
+      message: "This class designs a Binomial Distribution fitting curve"
       xLabel: "Add x"
 
     ,
@@ -31,7 +31,7 @@ module.exports = class DistList extends BaseService
       x: ['integer', 'number']
       y: false
       z: false
-      message: "Choose an x variable. Use the slider below the histogram to adjust the number of bins."
+      message: "This class designs a Poisson Distribution fitting curve"
       xLabel: ""
     ,
       name: 'Polynomial'
@@ -39,7 +39,7 @@ module.exports = class DistList extends BaseService
       x: ['integer', 'number']
       y: false
       z: false
-      message: "This class Designs a simple polynomial model fitting curve"
+      message: "This class designs a Polynomial Distribution fitting curve"
       xLabel: ""
 
 
