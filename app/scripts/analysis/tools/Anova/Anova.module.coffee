@@ -10,7 +10,7 @@ module.exports = modeler = new Module
 # module components
   components:
     services:
-      'socrat_analysis_mymodule_initService': require 'scripts/analysis/tools/Modeler/MyModuleInit.service.coffee'
+      'socrat_analysis_anova_initService': require 'scripts/analysis/tools/Modeler/AnovaInit.service.coffee'
       'socrat_analysis_mymodule_msgService': require 'scripts/analysis/tools/Modeler/MyModuleMsgService.service.coffee'
       'socrat_analysis_mymodule_myService': require 'scripts/analysis/tools/Modeler/MyModuleMyService.service.coffee'
       'socrat_analysis_mymodule_dataService': require 'scripts/analysis/tools/Modeler/ModelerDataService.service.coffee'
