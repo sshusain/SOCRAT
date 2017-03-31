@@ -30,6 +30,7 @@ module.exports = modeler = new Module
 
     directives:
       'modelerdir': require 'scripts/analysis/tools/Modeler/ModelerDir.directive.coffee'
+    runBlock: require 'scripts/analysis/MyModule/AnovaRunBlock.run.coffee'
 
 
   state:
