@@ -4,8 +4,8 @@ module.exports = class AnovaRunBlock
   register: ->
     @module.run @AnovaRunBlock()
   AnovaRunBlock: ->
-    runBlock = (socrat_analysis_anova_myService) ->
-      socrat_analysis_anova_myService.showAlert()
+    runBlock = (socrat_analysis_anova_startupService) ->
+      socrat_analysis_anova_startupService.showAlert()
     # inject dependencies for run block
-    runBlock.$inject = ['socrat_analysis_anova_myService']
+    runBlock.$inject = ['socrat_analysis_anova_startupService']
     runBlock
