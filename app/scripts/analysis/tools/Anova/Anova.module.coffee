@@ -14,6 +14,10 @@ module.exports = modeler = new Module
       'socrat_analysis_anova_msgService': require 'scripts/analysis/tools/Anova/AnovaMsgService.service.coffee'
       'socrat_analysis_anova_startupService': require 'scripts/analysis/tools/Anova/AnovaStartupService.service.coffee'
 
+    controllers:
+      'ChartsSidebarCtrl': require 'scripts/analysis/charts/ChartsSidebarCtrl.controller.coffee'
+      'AnovaMainCtrl': require 'scripts/analysis/tools/Anova/AnovaMainCtrl.controller.coffee'
+
     runBlock: require 'scripts/analysis/tools/Anova/AnovaRunBlock.run.coffee'
 
 
